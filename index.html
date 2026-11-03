@@ -26,7 +26,7 @@ h1{font-family:'DotGothic16','Noto Sans JP',sans-serif;font-weight:400;letter-sp
 .stat{border:2px solid #475f6e;border-radius:4px;background:#152332;box-shadow:4px 4px 0 #0a111a}.stat small{letter-spacing:1.2px}
 .heroBadge{width:234px;height:234px;transform:rotate(6deg);border:3px solid #5d807b;border-radius:8px;background:repeating-linear-gradient(45deg,#1c3742,#1c3742 10px,#1a303b 10px,#1a303b 20px);box-shadow:8px 8px 0 #07131c,0 0 65px #75e9b318}
 .saveDisk{width:152px;height:175px;border:5px solid #0c1a29;border-radius:7px;background:#d2d7be;padding:10px;box-shadow:5px 5px 0 #061520;transform:rotate(-6deg)}.diskTop{background:#243849;color:#d9f4d6;font:9px Orbitron;padding:9px 6px;white-space:nowrap}.diskCenter{margin-top:8px;height:81px;border:4px solid #40515b;background:#93d2ad;color:#26434a;font:54px 'DotGothic16';display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}.diskCenter small{font:9px Orbitron;letter-spacing:1px}.diskBottom{text-align:center;color:#435e5c;font-size:12px;letter-spacing:5px;margin-top:4px}
-.sectionTitle{font-family:Orbitron,sans-serif;letter-spacing:1px}.sectionTitle:before{content:'▶';font-family:'DotGothic16';font-size:18px;color:var(--yellow);margin-right:12px}.sectionTitle span{color:var(--cyan)}
+.sectionTitle{font-family:Orbitron,sans-serif;letter-spacing:1px}.sectionTitle:before{content:'▷';font-family:'DotGothic16';font-size:18px;color:var(--yellow);margin-right:12px}.sectionTitle span{color:var(--cyan)}
 .field,.input{border:2px solid #465f71;border-radius:4px;background:#0f1d2d}.field:focus,.input:focus{outline:2px solid #7ee8bc;outline-offset:1px}
 .card{background:#162435;border:2px solid #3d576b;border-radius:5px;box-shadow:5px 5px 0 #090f1b}.card:hover{transform:translateY(-4px);border-color:var(--cyan);box-shadow:5px 9px 0 #091119}.cover{background:repeating-linear-gradient(135deg,#183742,#183742 20px,#20354a 20px,#20354a 40px)}.cardBody{padding:19px}.card h3{font-family:'DotGothic16','Noto Sans JP',sans-serif;font-weight:400;font-size:21px}.meta{color:var(--cyan)}
 .rank{border-radius:3px;border:2px solid #fff6;box-shadow:3px 3px 0 #0c162a;font-family:Orbitron,sans-serif}
@@ -192,16 +192,49 @@ body{background-color:#090f18;min-height:100vh}
 
 /* The global header now also replaces the old library-only tabs. */
 #libraryPage .libraryTabs{display:none!important}
+
+/* Read-only pages: suppress the blinking caret in non-editable text.
+   Chrome's F7 caret-browsing is also a browser setting; toggle it off with F7. */
+html, body { caret-color: transparent; }
+.siteHeader .brand,
+.siteHeader .brand *,
+.heroScreen,
+.heroScreen *,
+.sectionTitle,
+.sectionTitle *,
+.stats,
+.stats *,
+footer,
+footer * { -webkit-user-select: none; user-select: none; }
+/* Actual form controls remain fully editable and have a visible caret. */
+input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
+textarea,
+select,
+[contenteditable="true"] {
+  caret-color: auto;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Platform-independent pixel UI glyphs. No colored system emoji in public navigation. */
+.pixelIcon{display:inline-block;width:17px;height:17px;flex:none;vertical-align:-3px;margin-right:7px;shape-rendering:crispEdges;color:inherit}
+.siteHeader .headerNav a{display:inline-flex;align-items:center;justify-content:center;gap:0}
+.heroCopy .eyebrow{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.heroCopy .eyebrow .pixelIcon{color:#ffd166;margin:0}
+/* A single outer border only: remove the extra inset frame. */
+.heroScreen{box-shadow:6px 6px 0 #061019!important}
+.heroScreen::after{content:none!important;display:none!important}
+@media(max-width:700px){.siteHeader .headerNav a{display:flex;align-items:center;justify-content:center}.siteHeader .headerNav .pixelIcon{width:16px;height:16px;margin-right:6px}}
 </style></head><body>
 <header class="siteHeader">
  <div class="wrap top">
   <a href="#reviews" class="brand" aria-label="セーブしました。 レビュートップへ"><span class="brandMark">▣</span>セーブしました。<small>PERSONAL GAME SAVE FILE</small></a>
 <nav class="blogNav headerNav" aria-label="ブログ内メニュー">
- <a href="#reviews" data-nav="reviews" aria-current="page">▶ レビューログ</a>
- <a href="#library" data-nav="library">▣ ゲームライブラリ</a>
- <a href="#backlog" data-nav="backlog">▤ 積みゲー</a>
- <a href="#annual" data-nav="annual">◷ 年間プレイ記録</a>
- <a href="#profile" data-nav="profile">☺ プロフィール</a>
+ <a href="#reviews" data-nav="reviews" aria-current="page"><svg class="pixelIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>レビューログ</a>
+ <a href="#library" data-nav="library"><svg class="pixelIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 5h4v15H4zM10 4h4v16h-4zM16 6h4v14h-4z"/></svg>ゲームライブラリ</a>
+ <a href="#backlog" data-nav="backlog"><svg class="pixelIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 6h16v14H4zM4 10h16M8 4h8M8 15h8"/></svg>積みゲー</a>
+ <a href="#annual" data-nav="annual"><svg class="pixelIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/></svg>年間プレイ記録</a>
+ <a href="#profile" data-nav="profile"><svg class="pixelIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><circle cx="12" cy="8" r="3"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>プロフィール</a>
 </nav>
  </div>
  <div class="wrap adminControlBar" id="adminControlBar" hidden>
@@ -218,7 +251,7 @@ body{background-color:#090f18;min-height:100vh}
 </header>
 <div id="syncBanner" class="syncBanner" role="status">接続を確認しています…</div>
 <main class="wrap">
-<div id="reviewsPage" class="pageView"><section class="hero heroRetro"><div class="heroScreen"><div class="heroCopy heroLead"><div class="eyebrow">▶ PLAYER 01 / PERSONAL GAME JOURNAL</div><h1 class="tagline">遊んだ記録を、<br><span>記憶する。</span></h1><p class="intro">遊んだゲーム、クリアした冒険、積んだままの一本。<br>プレイの軌跡をセーブして、ひとことレビューで残していく個人ブログです。</p><div class="stats"><div class="stat"><b id="count">0</b><small>REVIEWS</small></div><div class="stat"><b id="avg">--</b><small>AVG. SCORE</small></div><div class="stat"><b id="sCount">0</b><small>S RANK GAMES</small></div></div></div><div class="heroSaveArea" aria-label="レトロゲームのセーブファイルとブログロゴ"><div class="heroPlate" aria-hidden="true"></div><div class="saveSlotHead" aria-hidden="true"><span class="saveSlotLight"></span> SAVE SLOT / 01 <span>● ACTIVE</span></div><div class="heroBadge"><div class="saveDisk" aria-hidden="true"><div class="diskTop">SAVE FILE // 01</div><div class="diskCenter"><span class="diskSymbol">▣</span><small>DATA SAVED</small></div><div class="diskBottom">● ● ●</div></div><div class="saveCallout"><strong>セーブしました。</strong><small>PERSONAL GAME SAVE FILE</small></div></div></div></div></section>
+<div id="reviewsPage" class="pageView"><section class="hero heroRetro"><div class="heroScreen"><div class="heroCopy heroLead"><div class="eyebrow"><svg class="pixelIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="m8 5 11 7-11 7z"/></svg>PLAYER 01 / PERSONAL GAME JOURNAL</div><h1 class="tagline">遊んだ記録を、<br><span>記憶する。</span></h1><p class="intro">遊んだゲーム、クリアした冒険、積んだままの一本。<br>プレイの軌跡をセーブして、ひとことレビューで残していく個人ブログです。</p><div class="stats"><div class="stat"><b id="count">0</b><small>REVIEWS</small></div><div class="stat"><b id="avg">--</b><small>AVG. SCORE</small></div><div class="stat"><b id="sCount">0</b><small>S RANK GAMES</small></div></div></div><div class="heroSaveArea" aria-label="レトロゲームのセーブファイルとブログロゴ"><div class="heroPlate" aria-hidden="true"></div><div class="saveSlotHead" aria-hidden="true"><span class="saveSlotLight"></span> SAVE SLOT / 01 <span>● ACTIVE</span></div><div class="heroBadge"><div class="saveDisk" aria-hidden="true"><div class="diskTop">SAVE FILE // 01</div><div class="diskCenter"><span class="diskSymbol">▣</span><small>DATA SAVED</small></div><div class="diskBottom">● ● ●</div></div><div class="saveCallout"><strong>セーブしました。</strong><small>PERSONAL GAME SAVE FILE</small></div></div></div></div></section>
 <div class="toolbar"><div class="sectionTitle">REVIEW <span>LOG_</span></div><div class="filters"><input class="field" id="search" placeholder="🔎 タイトルで検索"><select class="field" id="platformFilter"><option value="">すべてのカテゴリー</option><option>PS5/PS4</option><option>Switch/Switch2</option><option>PC/Steam</option><option>Sound Track</option><option>Notes</option></select><select class="field" id="rankFilter"><option value="">すべてのランク</option><option>Sランク</option><option>Aランク</option><option>Bランク</option><option>Cランク</option><option>Dランク</option></select><select class="field" id="sort"><option value="new">新しい順</option><option value="high">点数が高い順</option><option value="low">点数が低い順</option><option value="old">古い順</option></select></div></div><div id="grid" class="grid"></div></div><div id="libraryPage" class="pageView" hidden></div><div id="profilePage" class="pageView" hidden></div></main><footer>セーブしました。 <span class="footLine">遊んだ記録を、記憶する。</span> ／ PLAYER SAVE FILE — powered by Supabase</footer>
 <div id="editor" class="overlay"><div class="modal"><div class="modalHead"><h2 id="editorTitle">🎮 新しいレビューを書く</h2><button class="btn close" data-close="editor">×</button></div><div class="modalBody"><form id="form"><div class="formgrid"><div class="full"><label>登録済みゲームから選ぶ（任意）</label><select class="input" id="linkedGame"><option value="">紐づけなし・新規タイトルを入力</option></select><div class="note">マイゲーム管理で登録したタイトルを選択すると、タイトル・機種が自動入力されます。</div></div><div class="full"><label>ゲームタイトル *</label><input class="input" id="title" maxlength="120" required placeholder="例：星巡りの冒険"></div><div><label>ジャンル</label><input class="input" id="genre" maxlength="40" placeholder="例：アクションRPG"></div><div><label>プラットフォーム</label><select class="input" id="platform"><option>PS5/PS4</option><option>Switch/Switch2</option><option>PC/Steam</option><option>Sound Track</option><option>Notes</option></select></div><div class="full playRecordEditor"><span class="ratingLabelPill">PLAY RECORD / レビュー時点のプレイ記録</span><div class="formgrid"><div><label for="reviewClearedOn">🏁 クリアした日付（任意）</label><input class="input" id="reviewClearedOn" type="date"><div class="note">未クリア・不明の場合は空欄でOKです。</div></div><div><label for="reviewPlayHours">⏱ 推定プレイ時間（任意）</label><div class="timeInputs reviewTimeInputs"><input id="reviewPlayHours" class="input" type="number" min="0" max="999999" step="1" placeholder="例：58" aria-label="推定プレイ時間（時間）"><span>時間</span><input id="reviewPlayMinutes" class="input" type="number" min="0" max="59" step="1" placeholder="30" aria-label="推定プレイ時間（分）"><span>分</span></div><div class="note">おおよその時間でOK。空欄なら記事には表示しません。</div></div></div><div class="note">この情報はレビュー記事に保存されます。ライブラリの累計プレイ時間とは別に記録されます。</div></div><div class="full"><label>ゲームのカバー画像URL（任意・https://...）</label><input class="input" id="cover" type="url" placeholder="https://example.com/game.jpg"></div>
 <div class="full amazonFields"><span class="ratingLabelPill">SHOP LINK / AMAZON</span><label for="amazonUrl">Amazon商品ページのURL（任意）</label><input class="input" id="amazonUrl" type="url" placeholder="https://www.amazon.co.jp/dp/XXXXXXXXXX"><div class="note">レビューに「Amazonで商品を見る」ボタンを表示します。Amazon.co.jp / amzn.to などのリンクに対応。</div>
