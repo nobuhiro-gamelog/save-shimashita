@@ -157,7 +157,7 @@ body{background-color:#090f18;min-height:100vh}
 .syncBanner[data-kind="error"]{background:#442529;border-color:#c96875;color:#ffe3de}
 .syncBanner[hidden]{display:none}
 </style></head><body>
-<header><div class="wrap top"><a href="#" class="brand"><span class="brandMark">▣</span>セーブしました。<small>PERSONAL GAME SAVE FILE</small></a><div class="topright"><button class="btn" id="exportBtn" hidden>↧ バックアップ</button><button class="btn adminOnly" id="importBtn" hidden>↥ 旧版データ取込</button><input type="file" id="importInput" accept="application/json,.json" hidden><button class="btn" id="profileBtn">👤 プロフィール</button><button class="btn" id="libraryBtn">🎮 ゲームライブラリ</button><button class="btn adminOnly" id="discoverBtn" hidden>✨ 新作ゲーム検索</button><button class="btn primary" id="newBtn" hidden>＋ レビューを書く</button><button class="btn" id="loginBtn">🔒 管理者ログイン</button><button class="btn" id="logoutBtn" hidden>ログアウト</button></div></div></header>
+<header><div class="wrap top"><a href="#" class="brand"><span class="brandMark">▣</span>セーブしました。<small>PERSONAL GAME SAVE FILE</small></a><div class="topright"><button class="btn" id="exportBtn" hidden>↧ バックアップ</button><button class="btn adminOnly" id="importBtn" hidden>↥ 旧版データ取込</button><input type="file" id="importInput" accept="application/json,.json" hidden><button class="btn" id="profileBtn">👤 プロフィール</button><button class="btn" id="libraryBtn">🎮 ゲームライブラリ</button><button class="btn adminOnly" id="discoverBtn" hidden>✨ 新作ゲーム検索</button><button class="btn primary" id="newBtn" hidden>＋ レビューを書く</button><button class="btn" id="loginBtn" hidden aria-hidden="true" tabindex="-1">🔒 管理者ログイン</button><button class="btn" id="logoutBtn" hidden>ログアウト</button></div></div></header>
 <div id="syncBanner" class="syncBanner" role="status">接続を確認しています…</div>
 <main class="wrap"><nav class="blogNav" aria-label="ブログ内メニュー">
  <a href="#reviews" data-nav="reviews" aria-current="page">▶ レビューログ</a>
@@ -203,14 +203,17 @@ const PROFILEKEY='game-log-profile-v1';const defaultProfile={name:'セーブし�
 function adminUI(){
   document.querySelectorAll('.adminOnly').forEach(el=>el.hidden=!authed);
   for(const id of ['newBtn','exportBtn','logoutBtn','discoverBtn','importBtn'])$(id).hidden=!authed;
-  $('loginBtn').hidden=authed || !cloudReady;
+  // Public visitors never see a sign-in entry in the navigation.
+  $('loginBtn').hidden=true;
 }
 function open(id){$(id).classList.add('active');document.body.style.overflow='hidden'}
 function close(id){$(id).classList.remove('active');document.body.style.overflow=''}
 function showAuth(){if(!cloudReady){alert('接続設定を先に完了してください。');return}$('authHint').textContent='Supabaseに登録された管理者アカウントでログインしてください。';$('authSubmit').textContent='ログイン';$('authForm').reset();open('auth')}
 $('authForm').onsubmit=async e=>{e.preventDefault();const button=$('authSubmit');button.disabled=true;try{
   await GameCloud.login($('authEmail').value.trim(),$('authPass').value);
-  authed=true;adminUI();close('auth');await fetchAll();
+  authed=true;adminUI();close('auth');
+  if(location.hash==='#admin') location.hash='#reviews';
+  await fetchAll();
 }catch(err){alert('ログインできませんでした：'+(err.message||err))}finally{button.disabled=false}};
 $('loginBtn').onclick=showAuth;
 $('logoutBtn').onclick=async()=>{try{await GameCloud.logout();authed=false;adminUI();close('editor');close('reader');close('gameEditor');close('profileEditor');await fetchAll()}catch(err){alert('ログアウトに失敗しました：'+err.message)}};
@@ -286,6 +289,14 @@ function showPage(){
   document.querySelectorAll('[data-lib-tab]').forEach(b=>b.classList.toggle('primary',b.dataset.libTab===libraryTab));
  }
  if(page==='profile')renderProfile();
+ // A direct URL is the only way to reveal the administrator login UI.
+ // This does not grant permissions: Supabase Auth + RLS remain authoritative.
+ if(desired==='admin'){
+   if(authed){ if($('auth').classList.contains('active'))close('auth'); }
+   else if(cloudReady && !openedRecoveryLink)showAuth();
+ } else if($('auth').classList.contains('active')){
+   close('auth');
+ }
  window.scrollTo({top:0,behavior:'instant'});
 }
 
@@ -349,7 +360,7 @@ $('setPasswordForm').onsubmit=async e=>{
     close('setNewPassword');
     await fetchAll();
     alert('パスワードを変更しました。新しいパスワードで管理者ログインしてください。');
-    showAuth();
+    location.hash='#admin';
   } catch(err) {
     $('setPasswordStatus').textContent='変更に失敗しました：'+(err.message||err);
   } finally { btn.disabled=false; }
