@@ -57,6 +57,23 @@
     }
     return true;
   }
+  // Public self-service password recovery; never exposes secret API keys.
+  async function requestPasswordReset(email, redirectTo) {
+    const { error } = await ensure().auth.resetPasswordForEmail(email, { redirectTo });
+    if (error) throw error;
+  }
+  async function updatePassword(newPassword) {
+    const { error } = await ensure().auth.updateUser({ password: newPassword });
+    if (error) throw error;
+  }
+  async function currentSession() {
+    const { data, error } = await ensure().auth.getSession();
+    if (error) throw error;
+    return data?.session || null;
+  }
+  function watchAuth(callback) {
+    return ensure().auth.onAuthStateChange(callback).data.subscription;
+  }
   async function logout() { const { error } = await ensure().auth.signOut(); if (error) throw error; }
   async function put(table, item) {
     if (!TABLES.includes(table)) throw new Error('不明なデータ種別です。');
@@ -98,5 +115,5 @@
     if (data.profile && typeof data.profile === 'object') await putProfile(data.profile);
     return { games: games.length, reviews: reviews.length, sessions: sessions.length };
   }
-  window.GameCloud = Object.freeze({ init, loadAll, checkAdmin, login, logout, put, remove, putProfile, importBackup });
+  window.GameCloud = Object.freeze({ init, loadAll, checkAdmin, login, logout, requestPasswordReset, updatePassword, currentSession, watchAuth, put, remove, putProfile, importBackup });
 })();
