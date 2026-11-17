@@ -314,6 +314,28 @@ select,
 @media(max-width:620px){.reviewExternalLinks{gap:10px}.detailExternalLinks{gap:12px}}
 .xShareButton{border-color:#5a788b;background:#121e2c;color:#e8f8ff}.xShareButton:hover{border-color:var(--cyan);background:#1a3041}
 
+
+/* LAST REVIEW: restrained framed rank emblem */
+.homeTileFeature .homeMiniRank{
+  display:inline-flex;align-items:center;justify-content:center;
+  float:right;min-width:56px;height:56px;padding:5px 9px;
+  margin:0 0 10px 14px;
+  border:2px solid #e0bd6d;border-radius:5px;
+  background:linear-gradient(145deg,rgba(50,56,48,.96),rgba(17,39,42,.97));
+  box-shadow:inset 0 0 0 2px rgba(255,235,171,.08),3px 3px 0 rgba(4,15,21,.8);
+  color:#ffe19a;font:900 34px/1 Orbitron,sans-serif;
+  text-shadow:0 1px 7px rgba(255,206,104,.19);
+}
+.homeTileFeature .homeMiniRank[data-rank="SS"]{
+  min-width:68px;color:#fff1b7;border-color:#fff2a5;
+  background:linear-gradient(135deg,#78531c,#b88938 52%,#553d1d);
+  box-shadow:inset 0 0 0 2px rgba(255,245,185,.34),0 0 14px rgba(255,208,96,.27),3px 3px 0 #07131c;
+}
+.homeTileFeature .homeMiniRank[data-rank="A"]{border-color:#83e9c3;color:#a5f9d7}
+.homeTileFeature .homeMiniRank[data-rank="B"]{border-color:#73caff;color:#9ad9ff}
+.homeTileFeature .homeMiniRank[data-rank="C"]{border-color:#c4aff8;color:#d6c8ff}
+.homeTileFeature .homeMiniRank[data-rank="D"]{border-color:#ff91a1;color:#ffb9c1}
+@media(max-width:620px){.homeTileFeature .homeMiniRank{height:50px;min-width:50px;font-size:30px}.homeTileFeature .homeMiniRank[data-rank="SS"]{min-width:61px}}
 </style><style id="profile-upload-style">.uploadPreview{display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap}.uploadPreview img{width:90px;height:90px;object-fit:cover;border:2px solid #76c4b2;border-radius:6px}.uploadPreview small{color:#a9dcca}.profileAvatar img{width:100%;height:100%;object-fit:cover}</style></head><body>
 <header class="siteHeader">
  <div class="wrap top">
@@ -515,7 +537,7 @@ function renderHighlights(){
  };
 
  setHighlightArtwork(latest,recent?reviewImage(recent):'');
- if(latest){latest.innerHTML=recent?`<div class="homeMiniRank">${recent.points==null?'LOG':rank(+recent.points)}</div><h3 class="homeItemTitle">${safe(recent.title)}</h3><div class="homeItemMeta">${safe(recent.platform||'REVIEW')} ${recent.points==null?'':'/ '+Number(recent.points)+'点'}</div><div class="homeReviewUpdate">更新日：${safe(date(recent.updatedAt||recent.created))}</div><div class="homeMiniButton" data-highlight-review="${safe(recent.id)}">レビューを読む ↗</div>`:'<span class="homeMuted">まだレビューはありません。<br>最初のひとことを記録しましょう。</span>'}
+ if(latest){latest.innerHTML=recent?`<div class="homeMiniRank" data-rank="${recent.points==null?'LOG':rank(+recent.points)}">${recent.points==null?'LOG':rank(+recent.points)}</div><h3 class="homeItemTitle">${safe(recent.title)}</h3><div class="homeItemMeta">${safe(recent.platform||'REVIEW')} ${recent.points==null?'':'/ '+Number(recent.points)+'点'}</div><div class="homeReviewUpdate">更新日：${safe(date(recent.updatedAt||recent.created))}</div><div class="homeMiniButton" data-highlight-review="${safe(recent.id)}">レビューを読む ↗</div>`:'<span class="homeMuted">まだレビューはありません。<br>最初のひとことを記録しましょう。</span>'}
  if(now){
    setHighlightArtwork(now,playing?libraryCoverURL(playing):'');
    now.innerHTML=playing?`<h3 class="homeItemTitle">${safe(playing.title)}</h3><div class="homeItemMeta">${safe(playing.platform||'')}</div><a class="homeMiniButton" href="#nowplaying">ライブラリを見る ↗</a>`:'<span class="homeMuted">プレイ中のゲームはまだありません。</span>';
